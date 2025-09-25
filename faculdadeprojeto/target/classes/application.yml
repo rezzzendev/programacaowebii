@@ -1,12 +1,24 @@
 spring:
   application:
     name: faculdadeprojeto
+
+  # Configuração do datasource (banco de dados H2 em memória)
   datasource:
-    url: jdbc:h2:mem:faculdadeprojeto
+    url: jdbc:h2:mem:faculdadeprojeto;DB_CLOSE_DELAY=-1  # Garantir que o banco de dados não feche após a conexão
     username: sa
-    password:
+    password: sa
+    driver-class-name: org.h2.Driver
+    dialect: org.hibernate.dialect.H2Dialect
+
+  # Configuração JPA
   jpa:
+    hibernate:
+      ddl-auto: update  # Comportamento desejado para o banco de dados (pode ser 'create', 'create-drop', 'update' ou 'validate')
     database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true  # Para exibir as queries SQL no log
+
+  # Configuração do H2 Console (console web para interagir com o banco)
   h2:
     console:
-      enable: true
+      enabled: true       # Habilita o console do H2
+      path: /h2-console   # Caminho para acessar o console no navegador
