@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    // NÃO injetar UserDetailsService via construtor aqui
+    // NÃO injete UserDetailsService via construtor aqui
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
