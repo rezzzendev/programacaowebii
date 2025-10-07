@@ -2,10 +2,14 @@ package com.progwebii.faculdadeprojeto.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "tb_usuario")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
 
     @Id
@@ -26,9 +30,4 @@ public class Usuario {
 
     @Column(name = "status")
     private Boolean status;
-
-    public Usuario(String login, String senha) {
-        this.login = login;
-        this.senha = senha;
-    }
 }
