@@ -26,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String login, @RequestParam String senha) {
-        userService.salvarUsuario(login, senha);
+    public String register(@RequestParam String login, @RequestParam String senha, @RequestParam String usuarioNome, @RequestParam String email) {
+        userService.salvarUsuario(login, senha, usuarioNome, email);
         return "redirect:/login";
     }
 
