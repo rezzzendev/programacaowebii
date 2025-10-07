@@ -22,8 +22,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByUsuarioNome(login)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        Usuario usuario = usuarioRepository.findByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o login" + login));
 
         User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(login);
         builder.password(usuario.getSenha());
@@ -31,7 +31,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return builder.build();
     }
 
-    public void salvarUsuario(String login, String senha) {
-        usuarioRepository.save(new Usuario(login, passwordEncoder.encode(senha)));
+    public void salvarUsuario(String login, String senha, String usuarioNome, String email) {
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setLogin(login);
+        novoUsuario.setSenha(passwordEncoder.encode(senha));
+        novoUsuario.setUsuarioNome(usuarioNome);
+        novoUsuario.setEmail(email); 
+        novoUsuario.setStatus(true);
+
+        usuarioRepository.save(novoUsuario);
     }
 }
