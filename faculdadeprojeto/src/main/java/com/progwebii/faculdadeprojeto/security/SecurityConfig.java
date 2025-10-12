@@ -11,14 +11,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    // NÃO injete UserDetailsService via construtor aqui
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Recebe UserDetailsService e passwordEncoder como parâmetros — o Spring resolve a ordem correta
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService,
                                                             BCryptPasswordEncoder passwordEncoder) {
