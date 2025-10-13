@@ -68,17 +68,16 @@
 <div class="home-card">
     <h1>Bem-vindo</h1>
 
-    <!-- mostra o nome do usuário autenticado.
-         Requer thymeleaf-extras-springsecurity e Spring Security configurado -->
+
     <span class="user" th:text="${#authentication.name}">Usuário</span>
 
     <p>Você está logado no sistema.</p>
 
     <div class="btn-row">
-        <!-- exemplo de link para área administrativa ou outra página -->
+
         <a th:href="@{/perfil}" class="button">Meu Perfil</a>
 
-        <!-- logout via link POST (padrão Spring Security espera POST) -->
+
         <form th:action="@{/logout}" method="post" th:object="${#authentication}">
             <button type="submit">Sair</button>
         </form>
