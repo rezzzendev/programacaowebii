@@ -3,9 +3,8 @@ package com.progwebii.faculdadeprojeto.controller;
 import com.progwebii.faculdadeprojeto.model.Usuario;
 import com.progwebii.faculdadeprojeto.service.UserDetailsServiceImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
 
@@ -23,63 +22,62 @@ public class AuthController {
         return "login";
     }
 
+
     @GetMapping("/register")
-    public String registerPage() {
+    public String registerPage(Model model) {
+        model.addAttribute("usuario", new Usuario());
         return "register";
     }
 
+
     @PostMapping("/register")
-    public String register(
-            @RequestParam String login,
-            @RequestParam String senha,
-            @RequestParam String usuarioNome,
-            @RequestParam String email
-    ) {
+    public String register(@ModelAttribute Usuario usuario, Model model) {
         try {
 
-            Usuario novoUsuario = Usuario.class.getDeclaredConstructor().newInstance();
-
-            Field fLogin = Usuario.class.getDeclaredField("login");
-            Field fSenha = Usuario.class.getDeclaredField("senha");
-            Field fNome = Usuario.class.getDeclaredField("usuarioNome");
-            Field fEmail = Usuario.class.getDeclaredField("email");
-
-
-            fLogin.setAccessible(true);
-            fSenha.setAccessible(true);
-            fNome.setAccessible(true);
-            fEmail.setAccessible(true);
-
-
-            fLogin.set(novoUsuario, login);
-            fSenha.set(novoUsuario, senha);
-            fNome.set(novoUsuario, usuarioNome);
-            fEmail.set(novoUsuario, email);
-
-
-            System.out.println("Usuário criado via reflexão:");
-            for (Field f : Usuario.class.getDeclaredFields()) {
-                f.setAccessible(true);
-                System.out.println(f.getName() + " = " + f.get(novoUsuario));
+            if (!validarCamposObrigatorios(usuario)) {
+                model.addAttribute("erro", "Preencha todos os campos obrigatórios!");
+                model.addAttribute("usuario", usuario);
+                return "register";
             }
 
 
             userService.salvarUsuario(
-                    novoUsuario.getLogin(),
-                    novoUsuario.getSenha(),
-                    novoUsuario.getUsuarioNome(),
-                    novoUsuario.getEmail()
+                    usuario.getLogin(),
+                    usuario.getSenha(),
+                    usuario.getUsuarioNome(),
+                    usuario.getEmail()
             );
+
+            model.addAttribute("mensagem", "Usuário cadastrado com sucesso!");
+            return "redirect:/login";
 
         } catch (Exception e) {
             e.printStackTrace();
+            model.addAttribute("erro", "Erro ao registrar usuário: " + e.getMessage());
+            model.addAttribute("usuario", usuario);
+            return "register";
         }
-
-        return "redirect:/login";
     }
 
     @GetMapping("/home")
     public String home() {
         return "home";
+    }
+
+
+    private boolean validarCamposObrigatorios(Object obj) throws IllegalAccessException {
+        for (Field f : obj.getClass().getDeclaredFields()) {
+            f.setAccessible(true);
+
+            if (f.getName().equals("id") || f.getName().equals("status"))
+                continue;
+
+            Object valor = f.get(obj);
+            if (valor == null || valor.toString().isBlank()) {
+                System.out.println("Campo vazio: " + f.getName());
+                return false;
+            }
+        }
+        return true;
     }
 }
