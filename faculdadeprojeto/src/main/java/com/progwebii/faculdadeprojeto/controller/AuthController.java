@@ -14,20 +14,18 @@ import org.springframework.web.bind.annotation.*; // MUDANÇA
 import java.lang.reflect.Field;
 import java.util.Map; // MUDANÇA
 
-@RestController // MUDANÇA 1: De @Controller para @RestController
-@RequestMapping("/api/auth") // MUDANÇA 2: Adiciona o prefixo da API (igual ao Angular)
+@RestController
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserDetailsServiceImpl userService;
-    private final AuthenticationManager authenticationManager; // MUDANÇA 3: Necessário para o login
+    private final AuthenticationManager authenticationManager;
 
-    // MUDANÇA 4: Injetar o AuthenticationManager
     public AuthController(UserDetailsServiceImpl userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
 
-    // MUDANÇA 5: Endpoint de Login que o Angular espera
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> loginRequest) {
         try {
@@ -39,8 +37,6 @@ public class AuthController {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            // O frontend só precisa saber que deu certo (status 200 OK)
-            // O cookie de sessão (JSESSIONID) será enviado automaticamente por causa do withCredentials
             return ResponseEntity.ok().body(Map.of("message", "Login bem-sucedido!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -48,17 +44,13 @@ public class AuthController {
         }
     }
 
-    // MUDANÇA 6: Endpoint de Registro que o Angular espera
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UsuarioDTO usuarioDTO) { // MUDANÇA 7: Usar @RequestBody e o DTO
+    public ResponseEntity<?> register(@RequestBody UsuarioDTO usuarioDTO) {
         try {
-            // Validação simples (pode reusar seu método 'validarCamposObrigatorios')
-            if (usuarioDTO.getLogin() == null || usuarioDTO.getLogin().isBlank() ||
-                usuarioDTO.getSenha() == null || usuarioDTO.getSenha().isBlank() ||
-                usuarioDTO.getUsuarioNome() == null || usuarioDTO.getUsuarioNome().isBlank() ||
-                usuarioDTO.getEmail() == null || usuarioDTO.getEmail().isBlank()) {
-                
-                return ResponseEntity.badRequest().body("Preencha todos os campos obrigatórios!");
+
+            String erro = validarCamposObrigatorios(usuarioDTO);
+            if (erro != null) {
+                return ResponseEntity.badRequest().body(Map.of("error", erro));
             }
 
             userService.salvarUsuario(
@@ -68,15 +60,28 @@ public class AuthController {
                     usuarioDTO.getEmail()
             );
 
-            return ResponseEntity.ok(Map.of("message", "Usuário cadastrado com sucesso!")); // MUDANÇA 8: Retornar JSON
-
+            return ResponseEntity.ok(Map.of("message", "Usuário cadastrado com sucesso!"));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Erro ao registrar usuário: " + e.getMessage());
+                    .body(Map.of("error", "Erro ao registrar usuário: " + e.getMessage()));
         }
     }
 
-    // Os métodos GET para /login, /register e /home foram removidos
-    // porque eles serviam templates HTML, o que agora é responsabilidade do Angular.
+    private String validarCamposObrigatorios(Object obj) throws IllegalAccessException {
+        for (Field f : obj.getClass().getDeclaredFields()) {
+            f.setAccessible(true);
+
+            if (f.getName().equals("id") || f.getName().equals("status"))
+                continue;
+
+            Object valor = f.get(obj);
+            if (valor == null || valor.toString().isBlank()) {
+                return "O campo '" + f.getName() + "' está vazio!";
+            }
+        }
+        return null;
+    }
+
+
 }
