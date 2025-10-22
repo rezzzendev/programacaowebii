@@ -10,9 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder; 
 import org.springframework.web.bind.annotation.*;
-
 import java.lang.reflect.Field;
-import java.util.Map; // MUDANÇA
+import java.util.Map; 
 
 @RestController
 @RequestMapping("/api/auth")
