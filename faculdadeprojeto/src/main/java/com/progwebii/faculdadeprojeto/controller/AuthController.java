@@ -39,7 +39,7 @@ public class AuthController {
             return ResponseEntity.ok().body(Map.of("message", "Login bem-sucedido!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .body("Erro de autenticação: " + e.getMessage());
+                                 .body("Erro de autenticação, usuário ou senha inválido");
         }
     }
 
@@ -63,7 +63,7 @@ public class AuthController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Erro ao registrar usuário: " + e.getMessage()));
+                    .body(Map.of("error", "Erro ao registrar usuário"));
         }
     }
 
