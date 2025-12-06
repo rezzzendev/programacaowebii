@@ -10,7 +10,6 @@ public class UsuarioDTO {
     private String login;
     private String senha;
 
-    // ✅ ESTE CAMPO ESTAVA FALTANDO
     private String usuarioNome;
 
     private String email;
