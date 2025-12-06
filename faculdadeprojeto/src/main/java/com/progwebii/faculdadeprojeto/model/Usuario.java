@@ -5,29 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-@Entity
+
 @Data
-@Table(name = "tb_usuario")
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "tb_usuario")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", nullable = false)
     private String login;
-
-    @Column(name = "senha", nullable = false)
     private String senha;
 
-    @Column(name = "email", nullable = false)
-    private String email;
+    @Enumerated(EnumType.STRING)
+    private TipoUsuario tipo; // ADMIN, PROFESSOR, ALUNO
 
-    @Column(name = "nome_usuario", nullable = false)
-    private String usuarioNome;
-
-    @Column(name = "status")
-    private Boolean status;
+    private String matriculaVinculada; // quando for aluno
 }
+

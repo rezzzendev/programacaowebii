@@ -1,44 +1,52 @@
 package com.progwebii.faculdadeprojeto.service;
 
+import com.progwebii.faculdadeprojeto.model.TipoUsuario;
 import com.progwebii.faculdadeprojeto.model.Usuario;
 import com.progwebii.faculdadeprojeto.repository.UsuarioRepository;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    public UserDetailsServiceImpl(UsuarioRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.usuarioRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
+    // ✅ USADO PELO LOGIN
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByLogin(login)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o login" + login));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(login);
-        builder.password(usuario.getSenha());
-        builder.roles("USER");
-        return builder.build();
+        Usuario usuario = usuarioRepository.findByLogin(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        return new User(
+                usuario.getLogin(),
+                usuario.getSenha(),
+                List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getTipo().name()))
+        );
     }
 
-    public void salvarUsuario(String login, String senha, String usuarioNome, String email) {
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setLogin(login);
-        novoUsuario.setSenha(passwordEncoder.encode(senha));
-        novoUsuario.setUsuarioNome(usuarioNome);
-        novoUsuario.setEmail(email); 
-        novoUsuario.setStatus(true);
+    // ✅ MÉTODO QUE ESTAVA FALTANDO (USADO NO REGISTER)
+    public void salvarUsuario(String login, String senha, String nome, String email) {
 
-        usuarioRepository.save(novoUsuario);
+        Usuario usuario = new Usuario();
+        usuario.setLogin(login);
+        usuario.setSenha(passwordEncoder.encode(senha));
+
+        // ✅ define tipo padrão
+        usuario.setTipo(TipoUsuario.ALUNO);
+
+        // ✅ se quiser vincular matrícula depois, fica null por enquanto
+        usuario.setMatriculaVinculada(null);
+
+        usuarioRepository.save(usuario);
     }
 }

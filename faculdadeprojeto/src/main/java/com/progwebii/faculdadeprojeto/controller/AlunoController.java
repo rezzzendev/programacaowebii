@@ -3,7 +3,7 @@ package com.progwebii.faculdadeprojeto.controller;
 import com.progwebii.faculdadeprojeto.dto.AlunoDTO;
 import com.progwebii.faculdadeprojeto.model.Aluno;
 import com.progwebii.faculdadeprojeto.service.AlunoService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,31 +11,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/alunos")
-@AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class AlunoController {
 
-    private final AlunoService alunoService;
+    @Autowired
+    private AlunoService alunoService;
 
-    @PostMapping("/cadastrar")
-    public ResponseEntity<Aluno> cadastrar(@RequestBody AlunoDTO alunoDTO) {
-        Aluno alunoCadastrado = alunoService.cadastrar(alunoDTO);
-        return ResponseEntity.ok(alunoCadastrado);
+    @PostMapping
+    public ResponseEntity<Aluno> criar(@RequestBody AlunoDTO dto) {
+        Aluno saved = alunoService.cadastrar(dto);
+        return ResponseEntity.status(201).body(saved);
     }
 
-    @GetMapping("/listar")
+    @GetMapping
     public ResponseEntity<List<Aluno>> listar() {
-        List<Aluno> alunos = alunoService.listar();
-        return ResponseEntity.ok(alunos);
+        return ResponseEntity.ok(alunoService.listar());
     }
 
-    @PutMapping("/atualizar/{id}")
-    public ResponseEntity<Aluno> atualizar(@PathVariable Long id, @RequestBody AlunoDTO alunoDTO) {
-        return ResponseEntity.ok(alunoService.atualizar(id, alunoDTO));
+    @GetMapping("/{matricula}")
+    public ResponseEntity<Aluno> buscar(@PathVariable String matricula) {
+        return ResponseEntity.ok(alunoService.buscarPorMatricula(matricula));
     }
 
-    @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Aluno> deletar(@PathVariable Long id) {
-        alunoService.deletar(id);
+    @PutMapping("/{matricula}")
+    public ResponseEntity<Aluno> atualizar(@PathVariable String matricula, @RequestBody AlunoDTO dto) {
+        return ResponseEntity.ok(alunoService.atualizar(matricula, dto));
+    }
+
+    @DeleteMapping("/{matricula}")
+    public ResponseEntity<Void> deletar(@PathVariable String matricula) {
+        alunoService.deletar(matricula);
         return ResponseEntity.noContent().build();
     }
 }

@@ -5,21 +5,27 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalDate;
+
 @Entity
-@Data
 @Table(name = "tb_aluno")
+@Data
 public class Aluno {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAluno;
+    @Column(nullable = false, unique = true)
+    private String matricula;
 
-    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "dataNascimento")
+    private String email;
+
     private LocalDate dataNascimento;
 
-    @Column(name = "matricula")
-    private String matricula;
+    @ManyToOne
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
 }

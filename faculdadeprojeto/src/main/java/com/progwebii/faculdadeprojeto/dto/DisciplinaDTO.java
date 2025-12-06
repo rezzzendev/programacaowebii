@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class DisciplinaDTO {
-
-    private String disciplinaNome;
+    private Long id;
+    private String nome;
+    private Long cursoId;
+    private Long professorId;
 }

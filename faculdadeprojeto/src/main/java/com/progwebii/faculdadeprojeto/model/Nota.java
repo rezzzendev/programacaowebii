@@ -11,8 +11,15 @@ public class Nota {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Double bimestre1;
+    private Double bimestre2;
+    private Double media;
 
-    @Column(name = "nota")
-    private Integer nota;
+    @ManyToOne
+    @JoinColumn(name = "matricula_aluno")
+    private Aluno aluno;
 
+    @ManyToOne
+    private Disciplina disciplina;
 }
+

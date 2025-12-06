@@ -1,10 +1,12 @@
 package com.progwebii.faculdadeprojeto.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 public class NotaDTO {
-
-    private Integer nota;
+    private Long id;
+    private String matriculaAluno; // usa matricula string
+    private Long disciplinaId;
+    private Double bimestre1;
+    private Double bimestre2;
 }

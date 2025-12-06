@@ -10,8 +10,7 @@ public class Professor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProfessor;
-
-    @Column(name = "nome_professor")
-    private String professorNome;
+    private Long id;
+    private String nome;
+    private String email;
 }

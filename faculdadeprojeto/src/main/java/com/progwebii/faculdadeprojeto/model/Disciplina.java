@@ -13,7 +13,11 @@ public class Disciplina {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome_disciplina", nullable = false)
-    private String disciplinaNome;
+    private String nome;
 
+    @ManyToOne
+    private Curso curso;
+
+    @ManyToOne
+    private Professor professor;
 }

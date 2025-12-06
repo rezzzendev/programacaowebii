@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProfessorDTO {
-
-    private String professorNome;
+    private Long id;
+    private String nome;
+    private String email;
 }

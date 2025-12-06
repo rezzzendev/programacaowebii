@@ -1,21 +1,21 @@
 package com.progwebii.faculdadeprojeto.controller;
 
-import com.progwebii.faculdadeprojeto.dto.UsuarioDTO; 
+import com.progwebii.faculdadeprojeto.dto.UsuarioDTO;
 import com.progwebii.faculdadeprojeto.model.Usuario;
 import com.progwebii.faculdadeprojeto.service.UserDetailsServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus; 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken; 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder; 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Field;
-import java.util.Map; 
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class  AuthController {
 
     private final UserDetailsServiceImpl userService;
     private final AuthenticationManager authenticationManager;
@@ -58,6 +58,7 @@ public class AuthController {
                     usuarioDTO.getUsuarioNome(),
                     usuarioDTO.getEmail()
             );
+
 
             return ResponseEntity.ok(Map.of("message", "Usuário cadastrado com sucesso!"));
         } catch (Exception e) {

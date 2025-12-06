@@ -2,44 +2,61 @@ package com.progwebii.faculdadeprojeto.service;
 
 import com.progwebii.faculdadeprojeto.dto.AlunoDTO;
 import com.progwebii.faculdadeprojeto.model.Aluno;
+import com.progwebii.faculdadeprojeto.model.Curso;
 import com.progwebii.faculdadeprojeto.repository.AlunoRepository;
-import lombok.AllArgsConstructor;
+import com.progwebii.faculdadeprojeto.repository.CursoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class AlunoService {
 
+    @Autowired
+    private AlunoRepository alunoRepository;
 
-    private final AlunoRepository alunoRepository;
+    @Autowired
+    private CursoRepository cursoRepository;
 
-    public Aluno cadastrar(AlunoDTO alunoDTO) {
-        Aluno alunoSalvo = new Aluno();
-        alunoSalvo.setNome(alunoDTO.getNome());
-        alunoSalvo.setDataNascimento(alunoDTO.getDataNascimento());
-        alunoSalvo.setMatricula(alunoDTO.getMatricula());
-        return alunoRepository.save(alunoSalvo);
+    public Aluno cadastrar(AlunoDTO dto) {
+        Curso curso = cursoRepository.findById(dto.getCursoId())
+                .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado"));
+
+        Aluno aluno = new Aluno();
+        aluno.setMatricula(dto.getMatricula());
+        aluno.setNome(dto.getNome());
+        aluno.setEmail(dto.getEmail());
+        aluno.setDataNascimento(dto.getDataNascimento());
+        aluno.setCurso(curso);
+
+        return alunoRepository.save(aluno);
     }
 
     public List<Aluno> listar() {
         return alunoRepository.findAll();
     }
 
-    public Aluno atualizar(Long id, AlunoDTO alunoDTO) {
-        Aluno alunoExistente = alunoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado com id: " + id));
-
-        alunoExistente.setNome(alunoDTO.getNome());
-        alunoExistente.setDataNascimento(alunoDTO.getDataNascimento());
-        alunoExistente.setMatricula(alunoDTO.getMatricula());
-        return alunoRepository.save(alunoExistente);
+    public Aluno buscarPorMatricula(String matricula) {
+        return alunoRepository.findById(matricula)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
     }
 
-    public void deletar(Long id) {
-        Aluno aluno = alunoRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("Aluno não encontrado com id: " + id));
-        alunoRepository.deleteById(id);
+    public Aluno atualizar(String matricula, AlunoDTO dto) {
+        Aluno aluno = buscarPorMatricula(matricula);
+
+        Curso curso = cursoRepository.findById(dto.getCursoId())
+                .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado"));
+
+        aluno.setNome(dto.getNome());
+        aluno.setEmail(dto.getEmail());
+        aluno.setDataNascimento(dto.getDataNascimento());
+        aluno.setCurso(curso);
+
+        return alunoRepository.save(aluno);
     }
 
+    public void deletar(String matricula) {
+        alunoRepository.deleteById(matricula);
+    }
 }
