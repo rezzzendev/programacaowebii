@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NotaService {
@@ -24,46 +25,37 @@ public class NotaService {
     @Autowired
     private DisciplinaRepository disciplinaRepository;
 
-    public Nota cadastrar(NotaDTO dto) {
-        Aluno aluno = alunoRepository.findById(dto.getMatriculaAluno())
-                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+    // MÉTODO PRINCIPAL: cadastra ou atualiza (UPSERT)
+    public Nota salvarOuAtualizar(NotaDTO dto) {
+        Aluno aluno = alunoRepository.findByMatricula(dto.getMatriculaAluno())
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado: " + dto.getMatriculaAluno()));
 
         Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Disciplina não encontrada"));
 
-        Nota nota = new Nota();
-        nota.setAluno(aluno);
-        nota.setDisciplina(disciplina);
-        nota.setBimestre1(dto.getBimestre1());
-        nota.setBimestre2(dto.getBimestre2());
+        // Busca se já existe nota desse aluno nessa disciplina
+        Optional<Nota> notaExistente = notaRepository
+                .findByAlunoMatriculaAndDisciplinaId(dto.getMatriculaAluno(), dto.getDisciplinaId());
 
-        Double b1 = dto.getBimestre1() == null ? 0.0 : dto.getBimestre1();
-        Double b2 = dto.getBimestre2() == null ? 0.0 : dto.getBimestre2();
-        nota.setMedia((b1 + b2) / 2);
+        Nota nota;
 
-        return notaRepository.save(nota);
-    }
+        if (notaExistente.isPresent()) {
+            nota = notaExistente.get();
+        } else {
+            nota = new Nota();
+            nota.setAluno(aluno);
+            nota.setDisciplina(disciplina);
+        }
 
-    public List<Nota> listar() {
-        return notaRepository.findAll();
-    }
-
-    public List<Nota> buscarPorAluno(String matricula) {
-        return notaRepository.findByAlunoMatricula(matricula);
-    }
-
-    public Nota atualizar(Long id, NotaDTO dto) {
-        Nota nota = notaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada"));
-
-        nota.setBimestre1(dto.getBimestre1());
-        nota.setBimestre2(dto.getBimestre2());
-
-        Double b1 = dto.getBimestre1() == null ? 0.0 : dto.getBimestre1();
-        Double b2 = dto.getBimestre2() == null ? 0.0 : dto.getBimestre2();
-        nota.setMedia((b1 + b2) / 2);
+        nota.setBimestre1(dto.getBimestre1() != null ? dto.getBimestre1() : 0.0);
+        nota.setBimestre2(dto.getBimestre2() != null ? dto.getBimestre2() : 0.0);
+        nota.setMedia((nota.getBimestre1() + nota.getBimestre2()) / 2);
 
         return notaRepository.save(nota);
+    }
+
+    public List<Nota> buscarPorDisciplina(Long disciplinaId) {
+        return notaRepository.findByDisciplinaId(disciplinaId);
     }
 
     public void deletar(Long id) {

@@ -16,19 +16,14 @@ public class NotaController {
     private NotaService notaService;
 
     @PostMapping
-    public ResponseEntity<Nota> cadastrar(@RequestBody NotaDTO notaDTO) {
-        Nota notaCadastrada = notaService.cadastrar(notaDTO);
-        return ResponseEntity.status(201).body(notaCadastrada);
+    public ResponseEntity<Nota> salvar(@RequestBody NotaDTO dto) {
+        Nota salva = notaService.salvarOuAtualizar(dto);
+        return ResponseEntity.ok(salva);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Nota>> listar() {
-        return ResponseEntity.ok(notaService.listar());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Nota> atualizar(@PathVariable Long id, @RequestBody NotaDTO notaDTO) {
-        return ResponseEntity.ok(notaService.atualizar(id, notaDTO));
+    @GetMapping("/disciplina/{disciplinaId}")
+    public ResponseEntity<List<Nota>> buscarPorDisciplina(@PathVariable Long disciplinaId) {
+        return ResponseEntity.ok(notaService.buscarPorDisciplina(disciplinaId));
     }
 
     @DeleteMapping("/{id}")

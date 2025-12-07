@@ -59,17 +59,17 @@ public class SecurityConfig {
     }
 
 
-    // ✅ FILTRO FINAL — TUDO LIBERADO (SEM 403)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll() // ✅ LIBERA TUDO
+                        .requestMatchers("/**").permitAll()
                 )
-                .headers(headers -> headers.frameOptions().disable()); // ✅ H2 Console
+                .headers(headers -> headers.frameOptions().disable());
 
         return http.build();
     }
 }
+
