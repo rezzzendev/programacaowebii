@@ -1,7 +1,12 @@
 package com.progwebii.faculdadeprojeto.controller;
 
 import com.progwebii.faculdadeprojeto.dto.AlunoDTO;
+import com.progwebii.faculdadeprojeto.dto.AlunoDisciplinaDTO;
 import com.progwebii.faculdadeprojeto.model.Aluno;
+import com.progwebii.faculdadeprojeto.model.Disciplina;
+import com.progwebii.faculdadeprojeto.model.AlunoDisciplina;
+
+
 import com.progwebii.faculdadeprojeto.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +47,19 @@ public class AlunoController {
     public ResponseEntity<Void> deletar(@PathVariable String matricula) {
         alunoService.deletar(matricula);
         return ResponseEntity.noContent().build();
+    }
+
+    // ✅ PAINEL DO ALUNO
+    @GetMapping("/{matricula}/disciplinas")
+    public ResponseEntity<List<Disciplina>> buscarDisciplinas(@PathVariable String matricula) {
+        return ResponseEntity.ok(alunoService.buscarDisciplinasDoAluno(matricula));
+    }
+    @GetMapping("/{matricula}/disciplinas/{disciplinaId}")
+    public ResponseEntity<AlunoDisciplinaDTO> buscarDetalhesDisciplina(
+            @PathVariable String matricula,
+            @PathVariable Long disciplinaId) {
+
+        AlunoDisciplinaDTO dto = alunoService.buscarDetalhesDisciplina(matricula, disciplinaId);
+        return ResponseEntity.ok(dto);
     }
 }
