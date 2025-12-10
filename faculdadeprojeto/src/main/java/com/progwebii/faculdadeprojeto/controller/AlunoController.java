@@ -53,7 +53,7 @@ public class AlunoController {
 
     @GetMapping("/{matricula}/disciplinas-ids")
     public ResponseEntity<List<Long>> listarDisciplinasIds(@PathVariable String matricula) {
-        List<Long> ids = alunoDisciplinaRepository.findByAlunoMatricula(matricula)
+        List<Long> ids = alunoDisciplinaRepository.findByAluno_Matricula(matricula)
                 .stream()
                 .map(ad -> ad.getDisciplina().getId())
                 .toList();

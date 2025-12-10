@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    // ✅ USADO PELO LOGIN
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -34,17 +34,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         );
     }
 
-    // ✅ MÉTODO QUE ESTAVA FALTANDO (USADO NO REGISTER)
+
     public void salvarUsuario(String login, String senha, String nome, String email) {
 
         Usuario usuario = new Usuario();
         usuario.setLogin(login);
         usuario.setSenha(passwordEncoder.encode(senha));
 
-        // ✅ define tipo padrão
+        
         usuario.setTipo(TipoUsuario.ALUNO);
 
-        // ✅ se quiser vincular matrícula depois, fica null por enquanto
+
         usuario.setMatriculaVinculada(null);
 
         usuarioRepository.save(usuario);

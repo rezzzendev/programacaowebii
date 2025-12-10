@@ -21,8 +21,8 @@ public class Usuario {
     private String senha;
 
     @Enumerated(EnumType.STRING)
-    private TipoUsuario tipo; // ADMIN, PROFESSOR, ALUNO
+    private TipoUsuario tipo;
 
-    private String matriculaVinculada; // quando for aluno
+    private String matriculaVinculada;
 }
 

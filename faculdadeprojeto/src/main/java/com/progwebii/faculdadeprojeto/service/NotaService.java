@@ -33,7 +33,7 @@ public class NotaService {
         Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Disciplina não encontrada"));
 
-        // Busca se já existe nota desse aluno nessa disciplina
+
         Optional<Nota> notaExistente = notaRepository
                 .findByAlunoMatriculaAndDisciplinaId(dto.getMatriculaAluno(), dto.getDisciplinaId());
 

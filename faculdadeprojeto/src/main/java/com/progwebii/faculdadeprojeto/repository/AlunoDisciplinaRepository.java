@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface AlunoDisciplinaRepository extends JpaRepository<AlunoDisciplina, Long> {
 
-    List<AlunoDisciplina> findByAlunoMatricula(String matricula);
+    List<AlunoDisciplina> findByAluno_Matricula(String matricula);
     void deleteByAlunoMatricula(String matricula);
 }

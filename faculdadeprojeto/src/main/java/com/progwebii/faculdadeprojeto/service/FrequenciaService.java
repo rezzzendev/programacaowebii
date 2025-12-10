@@ -28,14 +28,14 @@ public class FrequenciaService {
 
     public Frequencia registrarFrequencia(FrequenciaDTO dto) {
 
-        // Busca aluno e disciplina
+
         Aluno aluno = alunoRepository.findByMatricula(dto.getMatricula())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado: " + dto.getMatricula()));
 
         Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina não encontrada: " + dto.getDisciplinaId()));
 
-        // Busca frequência existente
+
         Optional<Frequencia> optFrequencia = frequenciaRepository
                 .findByAlunoMatriculaAndDisciplinaId(dto.getMatricula(), dto.getDisciplinaId());
 
@@ -43,7 +43,7 @@ public class FrequenciaService {
 
         if (optFrequencia.isPresent()) {
             frequencia = optFrequencia.get();
-            // Sobrescreve (edita) os valores, em vez de acumular
+
             frequencia.setPresencas(dto.getPresencas());
             frequencia.setFaltas(dto.getFaltas());
         } else {
@@ -65,9 +65,7 @@ public class FrequenciaService {
                 ));
     }
 
-    /**
-     * NOVO MÉTODO: Deleta uma frequência pelo ID.
-     */
+
     public void excluirFrequencia(Long id) {
         if (!frequenciaRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro de Frequência não encontrado.");

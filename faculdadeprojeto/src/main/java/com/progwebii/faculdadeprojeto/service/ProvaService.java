@@ -19,7 +19,7 @@ public class ProvaService {
     @Autowired
     private DisciplinaRepository disciplinaRepository;
 
-    // ✅ CADASTRAR PROVA
+
     public Prova cadastrar(ProvaDTO dto) {
         Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Disciplina não encontrada"));
@@ -31,12 +31,11 @@ public class ProvaService {
         return provaRepository.save(prova);
     }
 
-    // ✅ LISTAR PROVAS POR DISCIPLINA
     public List<Prova> listarPorDisciplina(Long disciplinaId) {
         return provaRepository.findByDisciplinaId(disciplinaId);
     }
 
-    // ✅ ATUALIZAR PROVA
+
     public Prova atualizar(Long id, Prova provaAtualizada) {
         Prova prova = provaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Prova não encontrada"));
@@ -46,7 +45,7 @@ public class ProvaService {
         return provaRepository.save(prova);
     }
 
-    // ✅ EXCLUIR PROVA
+
     public void excluir(Long id) {
         if (!provaRepository.existsById(id)) {
             throw new RuntimeException("Prova não encontrada");

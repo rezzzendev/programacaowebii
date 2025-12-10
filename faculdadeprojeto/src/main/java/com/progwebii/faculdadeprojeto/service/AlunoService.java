@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AlunoService {
@@ -134,7 +133,7 @@ public class AlunoService {
 
     // Painel do aluno
     public List<Disciplina> buscarDisciplinasDoAluno(String matricula) {
-        return alunoDisciplinaRepository.findByAlunoMatricula(matricula)
+        return alunoDisciplinaRepository.findByAluno_Matricula(matricula)
                 .stream()
                 .map(AlunoDisciplina::getDisciplina)
                 .toList();

@@ -19,13 +19,13 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    // ✅ Encoder
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ Provider com seu UserDetailsService
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider(
             UserDetailsServiceImpl userDetailsService,
@@ -37,13 +37,13 @@ public class SecurityConfig {
         return provider;
     }
 
-    // ✅ AuthenticationManager
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // ✅ CORS LIBERADO
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
