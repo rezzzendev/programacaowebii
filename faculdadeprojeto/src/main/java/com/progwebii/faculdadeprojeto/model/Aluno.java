@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_aluno")
@@ -25,7 +26,10 @@ public class Aluno {
 
     private LocalDate dataNascimento;
 
-    @ManyToOne
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    @ManyToOne()
     @JoinColumn(name = "curso_id")
     private Curso curso;
 }

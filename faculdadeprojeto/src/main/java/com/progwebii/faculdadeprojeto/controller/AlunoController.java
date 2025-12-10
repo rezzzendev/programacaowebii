@@ -4,10 +4,9 @@ import com.progwebii.faculdadeprojeto.dto.AlunoDTO;
 import com.progwebii.faculdadeprojeto.dto.AlunoDisciplinaDTO;
 import com.progwebii.faculdadeprojeto.model.Aluno;
 import com.progwebii.faculdadeprojeto.model.Disciplina;
-import com.progwebii.faculdadeprojeto.model.AlunoDisciplina;
-
-
+import com.progwebii.faculdadeprojeto.repository.AlunoDisciplinaRepository;
 import com.progwebii.faculdadeprojeto.service.AlunoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +21,12 @@ public class AlunoController {
     @Autowired
     private AlunoService alunoService;
 
+    @Autowired
+    private AlunoDisciplinaRepository alunoDisciplinaRepository;
+
     @PostMapping
     public ResponseEntity<Aluno> criar(@RequestBody AlunoDTO dto) {
-        Aluno saved = alunoService.cadastrar(dto);
-        return ResponseEntity.status(201).body(saved);
+        return ResponseEntity.status(201).body(alunoService.cadastrar(dto));
     }
 
     @GetMapping
@@ -40,7 +41,7 @@ public class AlunoController {
 
     @PutMapping("/{matricula}")
     public ResponseEntity<Aluno> atualizar(@PathVariable String matricula, @RequestBody AlunoDTO dto) {
-        return ResponseEntity.ok(alunoService.atualizar(matricula, dto));
+        return ResponseEntity.ok(alunoService.atualizaAluno(dto));
     }
 
     @DeleteMapping("/{matricula}")
@@ -49,17 +50,27 @@ public class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
-    // ✅ PAINEL DO ALUNO
+
+    @GetMapping("/{matricula}/disciplinas-ids")
+    public ResponseEntity<List<Long>> listarDisciplinasIds(@PathVariable String matricula) {
+        List<Long> ids = alunoDisciplinaRepository.findByAlunoMatricula(matricula)
+                .stream()
+                .map(ad -> ad.getDisciplina().getId())
+                .toList();
+
+        return ResponseEntity.ok(ids);
+    }
+
     @GetMapping("/{matricula}/disciplinas")
-    public ResponseEntity<List<Disciplina>> buscarDisciplinas(@PathVariable String matricula) {
+    public ResponseEntity<List<Disciplina>> listarDisciplinas(@PathVariable String matricula) {
         return ResponseEntity.ok(alunoService.buscarDisciplinasDoAluno(matricula));
     }
-    @GetMapping("/{matricula}/disciplinas/{disciplinaId}")
-    public ResponseEntity<AlunoDisciplinaDTO> buscarDetalhesDisciplina(
-            @PathVariable String matricula,
-            @PathVariable Long disciplinaId) {
 
-        AlunoDisciplinaDTO dto = alunoService.buscarDetalhesDisciplina(matricula, disciplinaId);
-        return ResponseEntity.ok(dto);
+    @GetMapping("/{matricula}/disciplinas/{disciplinaId}")
+    public ResponseEntity<AlunoDisciplinaDTO> detalhesDisciplina(
+            @PathVariable String matricula,
+            @PathVariable Long disciplinaId
+    ) {
+        return ResponseEntity.ok(alunoService.buscarDetalhesDisciplina(matricula, disciplinaId));
     }
 }
