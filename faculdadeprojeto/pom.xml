@@ -22,41 +22,48 @@
         <java.version>17</java.version>
     </properties>
 
-    <!-- ✅ DEPENDÊNCIAS -->
+    <!-- DEPENDÊNCIAS -->
     <dependencies>
 
-        <!-- ✅ JPA -->
+        <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- ✅ WEB -->
+        <!-- WEB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- ✅ SECURITY -->
+        <!-- SECURITY -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- ✅ THYMELEAF SECURITY -->
+        <!-- THYMELEAF SECURITY -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
-        <!-- ✅ H2 -->
+        <!-- H2 -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ✅ LOMBOK (CORRETO) -->
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- LOMBOK -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -64,7 +71,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ✅ TESTES -->
+        <!-- TESTES -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -79,11 +86,11 @@
 
     </dependencies>
 
-    <!-- ✅ BUILD -->
+    <!-- BUILD -->
     <build>
         <plugins>
 
-            <!-- ✅ COMPILER COM LOMBOK -->
+            <!-- COMPILER COM LOMBOK -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -101,7 +108,7 @@
                 </configuration>
             </plugin>
 
-            <!-- ✅ SPRING BOOT -->
+            <!-- SPRING BOOT -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
